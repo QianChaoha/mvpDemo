@@ -1,5 +1,6 @@
 package com.example.myapplication.presenter;
 
+import com.example.myapplication.base.BasePresenter;
 import com.example.myapplication.model.DataModel;
 import com.example.myapplication.model.DataModelImplV1;
 import com.example.myapplication.view.IDataView;
@@ -11,7 +12,7 @@ import java.util.List;
  * Created by cqian on 2018/3/11.
  */
 
-public class DataPresenterV1<T extends IDataView> {
+public class DataPresenterV1<T extends IDataView> extends BasePresenter<T> {
     //presenter要持有view和model
 
 
@@ -21,13 +22,20 @@ public class DataPresenterV1<T extends IDataView> {
     //model
     DataModel mDataModel = new DataModelImplV1();
 
-    //将view层引用加到弱引用中去，防止内存溢出
-    protected WeakReference<T> mViewRef;
 
-    public DataPresenterV1(T mDataView) {
+    /**
+     * 使用attachView()方法绑定view，可不需要此构造方法
+     * @param mDataView
+     */
+    //@Deprecated
+    //public DataPresenterV1(T mDataView) {
         //this.mDataView = mDataView;
-        mViewRef=new WeakReference<T>(mDataView);
-    }
+        //使用弱引用包裹view层引用。问题:每次都是内存不够时才会被垃圾回收器回收
+        //解决办法:使用attachView和detachView手动解绑
+        //mViewRef=new WeakReference<T>(mDataView);
+
+
+    //}
 
     /**
      * bind model和view
